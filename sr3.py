@@ -39,13 +39,31 @@ def show_custom():
 
 
 def print_pool(pool):
-    if len(pool) < 10:
-        print(f'{sorted(pool)}')
-    else:
-        p = Counter(pool)
-        for k in sorted(p.keys()):
-            print(f'{k:6>}: {p[k]}')
-    print(f'total: {sum(pool)}')
+    try:
+        acc = accumulate()
+        next(acc)
+        while True:
+            acc.send(next(pool))
+    except StopIteration:
+        try:
+            acc.send(None)
+        except StopIteration as data:
+            counter, total = data.value
+    for k in sorted(counter.keys()):
+        print(f'{k:6>}: {counter[k]:,}')
+    print(f'total: {total:,}')
+
+
+def accumulate():
+    accumulator = Counter()
+    total = 0
+    while True:
+        die = yield
+        if die is None:
+            break
+        total += die
+        accumulator.update({die: 1})
+    return accumulator, total
 
 
 options = {
@@ -61,18 +79,16 @@ while(True):
     except KeyError:
         try:
             quantity = custom_commands[inp]['size']
-            pool = list(roll_pool(quantity, custom_commands[inp]['rule_of_six']))
+            pool = roll_pool(quantity, custom_commands[inp]['rule_of_six'])
             print_pool(pool)
         except KeyError:
             try:
                 quantity = int(inp)
-                pool = list(roll_pool(quantity))
+                pool = roll_pool(quantity)
                 print_pool(pool)
             except Exception:
                 print('Invalid input')
-        except Exception as e:
-            print(e)
+        except Exception:
             print('Invalid input')
-    except Exception as e:
-        print(e)
+    except Exception:
         print('Invalid input')
