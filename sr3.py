@@ -5,46 +5,37 @@ import random
 custom_commands = {}
 
 
-def roll_pool(quantity, faces, rule_of_six=True):
+def roll_pool(quantity, rule_of_six=True):
     if rule_of_six:
-        return six_roll(quantity, faces)
-    return straight_roll(quantity, faces)
+        return six_roll(quantity)
+    return straight_roll(quantity)
 
 
-def six_roll(quantity, faces):
+def six_roll(quantity):
     for _ in range(quantity):
-        die = random.randint(1, faces)
+        die = random.randint(1, 6)
         if die == 6:
-            die += next(six_roll(1, faces))
+            die += next(six_roll(1))
         yield die
 
 
-def straight_roll(quantity, faces):
+def straight_roll(quantity):
     for _ in range(quantity):
-        yield random.randint(1, faces)
-
-
-def generic(val):
-    values = val.split('d')
-    quantity = int(values[0]) if values[0] else 1
-    faces = int(values[1])
-    return quantity, faces
+        yield random.randint(1, 6)
 
 
 def new():
     command = input('Command: ')
-    size = input('Pool size: ')
-    number = input('Type of die: ')
+    size = int(input('Pool size: '))
     rule_of_six = False if input('Use Rule of Six? Y/n: ').upper() == 'N' else True
-    custom_commands[command] = dict(size=size, number=number, rule_of_six=rule_of_six)
+    custom_commands[command] = dict(size=size, rule_of_six=rule_of_six)
 
 
 def show_custom():
     for c in custom_commands.keys():
         size = custom_commands[c]['size']
-        number = custom_commands[c]['number']
         ros = 'Y' if custom_commands[c]["rule_of_six"] else 'N'
-        print(f'{c} > {size}d{number}\t{ros}')
+        print(f'{c:>15} > {size:5}\t{ros}')
 
 
 def print_pool(pool):
@@ -69,17 +60,19 @@ while(True):
         options[inp]()
     except KeyError:
         try:
-            quantity, faces = generic(f"{custom_commands[inp]['size']}d{custom_commands[inp]['number']}")
-            pool = list(roll_pool(quantity, faces, custom_commands[inp]['rule_of_six']))
+            quantity = custom_commands[inp]['size']
+            pool = list(roll_pool(quantity, custom_commands[inp]['rule_of_six']))
             print_pool(pool)
         except KeyError:
             try:
-                quantity, faces = generic(inp)
-                pool = list(roll_pool(quantity, faces))
+                quantity = int(inp)
+                pool = list(roll_pool(quantity))
                 print_pool(pool)
             except Exception:
                 print('Invalid input')
-        except Exception:
+        except Exception as e:
             print(e)
-    except Exception:
+            print('Invalid input')
+    except Exception as e:
+        print(e)
         print('Invalid input')
