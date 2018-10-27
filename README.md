@@ -1,4 +1,4 @@
-# SR3 Roller
+# RPG Roller
 
 This project contains hacked out dice rollers for spur of the moment RPG sessions
 
