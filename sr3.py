@@ -70,11 +70,14 @@ def print_pool(pool, tn=None, quantity=None, offset=None):
     width = len(str(counter.most_common(1)[0][1]))
     for value, amount in sorted(counter.items()):
         print(f'{value:>6}: {amount:{width},} {"." * amount}')
-    total = f'{total}{offset:+}({total+offset:,})' if offset else f'{total:,}'
+    total_string = f'{total}{offset:+}({total+offset:,})' if offset else f'{total:,}'
     target = (f'({tn[0]}>{int(tn[0]) + TN_MODIFIER})' if TN_MODIFIER else f'({tn[0]})') if tn else ''
-    successes = f'TN{target}: {count_successes(counter, int(tn[0]))}' if tn else ''
-    glitch = f'!! GLITCH !! ' if counter.get(1, 0) >= quantity//2 else ''
-    print(f'{glitch}{successes}{" <> " if successes else ""}total: {total}')
+    successes = count_successes(counter, int(tn[0]))
+    successes_string = f'{successes} success{"" if successes == 1 else "es"} for TN{target}' if tn else ''
+    if counter.get(1, 0) >= quantity//2:
+        print(f'!! GLITCH !! ')
+    print(f'{successes_string}')
+    print(f'Total: {total_string}\n')
 
 
 def count_successes(pool, tn):
@@ -106,10 +109,10 @@ def set_tn_modifier(mod=None):
     '''
     global TN_MODIFIER
     if mod and mod[0] == '?':
-        print(f'TN Modifier is: {TN_MODIFIER}')
+        print(f'TN Modifier is: +{TN_MODIFIER}\n')
         return
     TN_MODIFIER = int(mod[0]) if mod else 0
-    print(f'TN Modifier is: {TN_MODIFIER}')
+    print(f'TN Modifier is: +{TN_MODIFIER}\n')
 
 
 def help(args=None):
