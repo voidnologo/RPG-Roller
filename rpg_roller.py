@@ -6,7 +6,7 @@ while(True):
     inp = input(">> ")
     values = inp.split('d')
     quantity = int(values[0]) if values[0] else 1
-    faces = int(values[1])
+    sides = int(values[1])
 
     pool = Counter()
     for _ in range(quantity):
