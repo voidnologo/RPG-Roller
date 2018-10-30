@@ -67,8 +67,9 @@ def print_pool(pool, tn=None, quantity=None, offset=None):
             acc.send(None)
         except StopIteration as data:
             counter, total = data.value
-    for k in sorted(counter.keys()):
-        print(f'{k:>6}: {counter[k]:,}')
+    width = len(str(counter.most_common(1)[0][1]))
+    for value, amount in sorted(counter.items()):
+        print(f'{value:>6}: {amount:{width},} {"." * amount}')
     total = f'{total}{offset:+}({total+offset:,})' if offset else f'{total:,}'
     target = (f'({tn[0]}>{int(tn[0]) + TN_MODIFIER})' if TN_MODIFIER else f'({tn[0]})') if tn else ''
     successes = f'TN{target}: {count_successes(counter, int(tn[0]))}' if tn else ''
