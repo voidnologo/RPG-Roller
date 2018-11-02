@@ -1,58 +1,58 @@
 import unittest
 from unittest import mock
 
-from char import *  # noqa F403
+import character
 
 
 class CharTests(unittest.TestCase):
 
     def setUp(self):
-        pass
-        # self.char = {
-        #     'attributes': {
-        #         'strength': 5
-        #     },
-        #     'skills': {
-        #         'pistols': 6
-        #     },
-        #     'pools': {
-        #         'combat': 6
-        #     },
-        #     'meta': {
-        #         'perception': 5,
-        #         'physical_damage': 0,
-        #         'stun_damage': 4
-        #     }
-        # }
+        char = {
+            'attributes': {
+                'strength': 5
+            },
+            'skills': {
+                'pistols': 6
+            },
+            'pools': {
+                'combat': 6
+            },
+            'meta': {
+                'perception': 5,
+                'physical_damage': 0,
+                'stun_damage': 4
+            }
+        }
+        setattr(character, 'char', char)
 
     def test_roll(self):
-        results = list(roll(5))
+        results = list(character.roll(5))
         self.assertEqual(5, len(results))
 
     @unittest.mock.patch('random.randint')
     def test_roll_implements_rule_of_six(self, rand):
         rand.side_effect = [6, 3]
-        results = list(roll(1))
+        results = list(character.roll(1))
         self.assertEqual(results, [9])
 
     def test_can_roll_for_attribute(self):
-        results = roll_stat('strength')
+        results = character.roll_stat('strength')
         self.assertEqual(5, len(list(results)))
 
     def test_can_roll_for_skills(self):
-        results = roll_stat('pistols')
+        results = character.roll_stat('pistols')
         self.assertEqual(6, len(list(results)))
 
     def test_can_roll_for_pool(self):
-        results = roll_stat('combat')
+        results = character.roll_stat('combat')
         self.assertEqual(6, len(list(results)))
 
     def test_returns_empty_list_if_stat_not_found(self):
-        results = roll_stat('definitely_not_there')
+        results = character.roll_stat('definitely_not_there')
         self.assertEqual(0, len(list(results)))
 
     def test_can_read_in_character(self):
-        char = read_character('data/tommy_talon.char')
+        char = character.read_character('data/tommy_talon.char')
         expected = {
             'attributes': {
                 'strength': 5

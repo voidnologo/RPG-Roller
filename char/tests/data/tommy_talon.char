@@ -1,0 +1,16 @@
+{
+    "attributes": {
+        "strength": 5
+    },
+    "skills": {
+        "pistols": 6
+    },
+    "pools": {
+        "combat": 6
+    },
+    "meta": {
+        "perception": 5,
+        "physical_damage": 0,
+        "stun_damage": 4
+    }
+}
