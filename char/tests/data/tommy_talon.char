@@ -1,15 +1,15 @@
 {
     "attributes": {
-        "strength": 5
+        "strength": "5;;"
     },
     "skills": {
-        "pistols": 6
+        "pistols": "6;;"
     },
     "pools": {
-        "combat": 6
+        "combat": "6;;",
+        "initiative": "2;F;9"
     },
-    "meta": {
-        "perception": 5,
+    "health": {
         "physical_damage": 0,
         "stun_damage": 4
     }
