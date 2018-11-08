@@ -72,7 +72,7 @@ def print_pool(pool, tn=None, quantity=None, offset=None):
         print(f'{value:>6}: {amount:{width},} {"." * amount}')
     total_string = f'{total}{offset:+}({total+offset:,})' if offset else f'{total:,}'
     target = (f'({tn[0]}>{int(tn[0]) + TN_MODIFIER})' if TN_MODIFIER else f'({tn[0]})') if tn else ''
-    successes = count_successes(counter, int(tn[0]))
+    successes = count_successes(counter, int(tn[0]) if tn else 0)
     successes_string = f'{successes} success{"" if successes == 1 else "es"} for TN{target}' if tn else ''
     if counter.get(1, 0) >= quantity//2:
         print(f'!! GLITCH !! ')
